@@ -42,5 +42,6 @@ impl GameControl {
         }
         self.view.update_camera();
         self.view.draw(&self.world);
+        self.view.draw_grid();
     }
 }
