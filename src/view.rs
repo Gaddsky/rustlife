@@ -6,6 +6,7 @@ pub struct WorldView {
 }
 
 pub const POINT_SIZE: f32 = 10.0;
+const LINE_THICKNESS: f32 = 0.5;
 
 impl WorldView {
     pub fn new() -> Self {
@@ -28,15 +29,17 @@ impl WorldView {
     pub fn draw_grid(&self) {
         let top_left = self.camera.screen_to_world(vec2(0.0, 0.0));
         let bottom_right = self.camera.screen_to_world(vec2(screen_width(), screen_height()));
-        for x in top_left.x as i32..=bottom_right.x as i32 {
-            if x % POINT_SIZE as i32 == 0 {
-                draw_line(x as f32, top_left.y, x as f32, bottom_right.y, 0.5, WHITE)
-            }
+
+        let mut x = (top_left.x / POINT_SIZE).floor() * POINT_SIZE;
+        while x <= bottom_right.x {
+            draw_line(x, top_left.y, x, bottom_right.y, LINE_THICKNESS, WHITE);
+            x += POINT_SIZE;
         }
-        for y in bottom_right.y as i32..=top_left.y as i32 {
-            if y % POINT_SIZE as i32 == 0 {
-                draw_line(top_left.x, y as f32, bottom_right.x, y as f32, 0.5, WHITE)
-            }
+
+        let mut y = (bottom_right.y / POINT_SIZE).floor() * POINT_SIZE;
+        while y <= top_left.y {
+            draw_line(top_left.x, y, bottom_right.x, y, LINE_THICKNESS, WHITE);
+            y += POINT_SIZE
         }
     }
     pub fn update_camera(&mut self) {
